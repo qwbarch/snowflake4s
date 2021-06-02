@@ -17,4 +17,8 @@ object Dependency {
    private val log4Cats = typeLevel(Version.log4Cats)(true)
    val log4CatsCore = log4Cats("log4cats-core")
    val log4CatsNoOp = log4Cats("log4cats-noop")
+
+   private val weaver = dependency("com.disneystreaming")(Version.weaver)(true) _
+   val weaverCats = weaver("weaver-cats")
+   val weaverScalaCheck = weaver("weaver-scalacheck")
 }

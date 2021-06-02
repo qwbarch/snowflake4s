@@ -5,11 +5,15 @@ lazy val root = (project in file("."))
       organization := "io.github.qwbarch",
       scalaVersion := "3.0.0",
       crossScalaVersions := Seq("3.0.0", "2.13.6", "2.12.14"),
+      testFrameworks += new TestFramework("weaver.framework.CatsEffect"),
       libraryDependencies ++= Seq(
          catsCore,
          catsKernel,
          catsEffectStd,
          catsEffectKernel,
          log4CatsCore,
+         log4CatsNoOp % Test,
+         weaverCats % Test,
+         weaverScalaCheck % Test,
       ),
    )
