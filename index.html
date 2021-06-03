@@ -108,7 +108,7 @@ dependencies {
   implementation "io.github.qwbarch:snowflake4s_${versions.ScalaBinary}:0.0.1"
 }</code></pre></dd></dl>
 <h2><a href="#quick-example" name="quick-example" class="anchor"><span class="anchor-link"></span></a>Quick example</h2>
-<p>Here is a minimal example to create a snowflake id:</p>
+<p>Here is a minimal example to create a snowflake id (Scala 3):</p>
 <pre class="prettyprint"><code class="language-scala">import cats.syntax.all.given
 import cats.effect.IO
 import cats.effect.IOApp
@@ -143,7 +143,7 @@ object Main extends IOApp.Simple:
 <h2><a href="#alternative-libraries" name="alternative-libraries" class="anchor"><span class="anchor-link"></span></a>Alternative libraries</h2>
 <ul>
   <li><a href="https://github.com/softwaremill/scala-id-generator">scala-id-generator</a> - If you&rsquo;re looking to generate snowflake ids imperatively, try out this library from lightbend!</li>
-  <li><a href="https://github.com/davenverse/fuuid">fuuid</a> - Looking for something more lightweight? This is a purely functional library for generating UUID&rsquo;s.</li>
+  <li><a href="https://github.com/davenverse/fuuid">fuuid</a> - Looking for something more lightweight than snowflakes? This is a purely functional library for generating UUID&rsquo;s.</li>
 </ul>
 <h2><a href="#credits" name="credits" class="anchor"><span class="anchor-link"></span></a>Credits</h2>
 <p>Full credits goes to <a href="https://about.twitter.com/">Twitter</a>. Implementation is from Twitter&rsquo;s <a href="https://github.com/twitter-archive/snowflake/blob/updated_deps/src/main/scala/com/twitter/service/snowflake/IdWorker.scala">archives</a>.</p>
