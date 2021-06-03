@@ -12,7 +12,7 @@ snowflake4s is a purely functional library used for generating unique ids, using
 
 ## Quick example
 
-Here is a minimal example to create a snowflake id:
+Here is a minimal example to create a snowflake id (Scala 3):
 
 ```scala
 import cats.syntax.all.given
@@ -57,7 +57,7 @@ sbt test
 
 ## Alternative libraries
 - [scala-id-generator](https://github.com/softwaremill/scala-id-generator) - If you're looking to generate snowflake ids imperatively, try out this library from lightbend!
-- [fuuid](https://github.com/davenverse/fuuid) - Looking for something more lightweight? This is a purely functional library for generating UUID's.
+- [fuuid](https://github.com/davenverse/fuuid) - Looking for something more lightweight than snowflakes? This is a purely functional library for generating UUID's.
 
 ## Credits
 
