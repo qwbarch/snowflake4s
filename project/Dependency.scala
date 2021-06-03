@@ -4,7 +4,7 @@ object Dependency {
 
    private def dependency(group: String)(version: String)(useScalaVersion: Boolean)(artifact: String) =
       (if (useScalaVersion) group %% _ else group % _)(artifact) % version
-   
+
    private val typeLevel = dependency("org.typelevel") _
    val catsCore = typeLevel(Version.catsCore)(true)("cats-core")
    val catsKernel = typeLevel(Version.catsKernel)(true)("cats-kernel")
