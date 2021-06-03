@@ -19,4 +19,4 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Run tests
-      run: sbt undeclaredCompileDependenciesTest unusedCompileDependenciesTest test
+      run: sbt undeclaredCompileDependenciesTest unusedCompileDependenciesTest test docs/makeSite docs/ghpagesPushSite
