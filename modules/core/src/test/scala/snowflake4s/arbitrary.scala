@@ -19,9 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package snowflake4s.arbitrary
+package io.qwbarch.snowflake4s.arbitrary
 
 import org.scalacheck.Arbitrary
-import snowflake4s.generator.workerDataCenterIdGen
+import io.qwbarch.snowflake4s.generator.workerDataCenterIdGen
 
 given Arbitrary[Long] = Arbitrary(workerDataCenterIdGen)

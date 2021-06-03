@@ -1,7 +1,7 @@
 import Dependency._
 
 lazy val commonSettings = Seq(
-   organization := "io.github.qwbarch",
+   organization := "io.qwbarch",
    scalaVersion := "3.0.0",
    crossScalaVersions := Seq("3.0.0", "2.13.6", "2.12.14"),
 )

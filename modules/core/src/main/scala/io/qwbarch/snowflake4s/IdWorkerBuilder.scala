@@ -19,12 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package snowflake4s
+package io.qwbarch.snowflake4s
 
-import cats.effect.kernel.Async
 import scala.util.hashing.MurmurHash3
 import org.typelevel.log4cats.Logger
 import cats.syntax.all.given
+import cats.effect.kernel.Async
 import cats.effect.kernel.Ref
 import cats.effect.std.Semaphore
 

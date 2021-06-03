@@ -21,7 +21,7 @@
  *
  * This product includes software developed at Twitter (https://twitter.com/).
  */
-package snowflake4s
+package io.qwbarch.snowflake4s
 
 import cats.syntax.all.given
 import cats.effect.kernel.Sync
