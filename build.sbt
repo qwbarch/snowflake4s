@@ -37,7 +37,7 @@ lazy val docs = (project in file("modules/docs"))
    .enablePlugins(ParadoxPlugin)
    .enablePlugins(ParadoxSitePlugin)
    .enablePlugins(GhpagesPlugin)
-   .settings(commonSettings)
+   .settings(commonSettings ++ noPublishSettings)
    .settings(
       scalacOptions := Nil,
       git.remoteRepo := "git@github.com:qwbarch/snowflake4s.git",
