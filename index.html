@@ -92,12 +92,12 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="small-12 large-9 column" id="docs">
 <h1><a href="#snowflake4s" name="snowflake4s" class="anchor"><span class="anchor-link"></span></a>snowflake4s</h1>
 <h2><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h2>
-<p>snowflake4s is a purely functional library used for generating unique ids, using Twitter&rsquo;s snowflake id format.</p><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.qwbarch" %% "snowflake4s" % "0.0.1"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
+<p>snowflake4s is a purely functional library used for generating unique ids, using Twitter&rsquo;s snowflake id format.</p><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s" % "0.0.1"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
   &lt;scala.binary.version&gt;3&lt;/scala.binary.version&gt;
 &lt;/properties&gt;
 &lt;dependencies&gt
   &lt;dependency&gt;
-    &lt;groupId&gt;io.qwbarch&lt;/groupId&gt;
+    &lt;groupId&gt;io.github.qwbarch&lt;/groupId&gt;
     &lt;artifactId&gt;snowflake4s_${scala.binary.version}&lt;/artifactId&gt;
     &lt;version&gt;0.0.1&lt;/version&gt;
   &lt;/dependency&gt
@@ -105,7 +105,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
   ScalaBinary: "3"
 ]
 dependencies {
-  implementation "io.qwbarch:snowflake4s_${versions.ScalaBinary}:0.0.1"
+  implementation "io.github.qwbarch:snowflake4s_${versions.ScalaBinary}:0.0.1"
 }</code></pre></dd></dl>
 <h2><a href="#quick-example" name="quick-example" class="anchor"><span class="anchor-link"></span></a>Quick example</h2>
 <p>Here is a minimal example to create a snowflake id:</p>
@@ -137,13 +137,13 @@ object Main extends IOApp.Simple:
    .build
 </code></pre>
 <h2><a href="#running-tests" name="running-tests" class="anchor"><span class="anchor-link"></span></a>Running tests</h2>
-<p>To run snowflake4s&rsquo; unit tests, simply run the following command:</p>
+<p>To run snowflake4s&rsquo; unit tests, simply enter the following command:</p>
 <pre><code>sbt test
 </code></pre>
 <h2><a href="#alternative-libraries" name="alternative-libraries" class="anchor"><span class="anchor-link"></span></a>Alternative libraries</h2>
 <ul>
   <li><a href="https://github.com/softwaremill/scala-id-generator">scala-id-generator</a> - If you&rsquo;re looking to generate snowflake ids imperatively, try out this library from lightbend!</li>
-  <li><a href="https://github.com/davenverse/fuuid">fuuid</a> - Looking for something more lightweight? This library is a purely functional library for generating UUID&rsquo;s.</li>
+  <li><a href="https://github.com/davenverse/fuuid">fuuid</a> - Looking for something more lightweight? This is a purely functional library for generating UUID&rsquo;s.</li>
 </ul>
 <h2><a href="#credits" name="credits" class="anchor"><span class="anchor-link"></span></a>Credits</h2>
 <p>Full credits goes to <a href="https://about.twitter.com/">Twitter</a>. Implementation is from Twitter&rsquo;s <a href="https://github.com/twitter-archive/snowflake/blob/updated_deps/src/main/scala/com/twitter/service/snowflake/IdWorker.scala">archives</a>.</p>
