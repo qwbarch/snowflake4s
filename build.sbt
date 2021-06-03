@@ -59,7 +59,7 @@ lazy val credentialSettings = Seq(
       password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
    } yield Credentials(
       "Sonatype Nexus Repository Manager",
-      "s01.oss.sonatype.org",
+      "oss.sonatype.org",
       username,
       password,
    )).toSeq,
@@ -114,11 +114,10 @@ lazy val releaseSettings = Seq(
    publishMavenStyle := true,
    Test / publishArtifact := false,
    sonatypeCredentialHost := "s01.oss.sonatype.org",
+   sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
+   versionScheme := Some("semver-spec"),
 )
 
 lazy val sharedPublishSettings = Seq(
-   publishTo := Some(
-      if (isSnapshot.value) Opts.resolver.sonatypeSnapshots
-      else Opts.resolver.sonatypeStaging,
-   ),
+   publishTo := sonatypePublishTo.value,
 )
