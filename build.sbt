@@ -10,7 +10,8 @@ lazy val root = (project in file("."))
    .settings(
       Compile / unmanagedSourceDirectories := Nil,
       Test / unmanagedSourceDirectories := Nil,
-   ).aggregate(core)
+   )
+   .aggregate(core)
 
 lazy val core = (project in file("modules/core"))
    .settings(commonSettings)
@@ -33,3 +34,11 @@ lazy val docs = (project in file("modules/docs"))
    .dependsOn(core)
    .enablePlugins(ParadoxPlugin)
    .settings(commonSettings)
+   .settings(
+      scalacOptions := Nil,
+      paradoxTheme := Some(builtinParadoxTheme("generic")),
+      paradoxProperties ++= Map(
+         "organization" -> organization.value,
+         "version" -> version.value,
+      ),
+   )
