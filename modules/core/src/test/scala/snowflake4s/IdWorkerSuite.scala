@@ -3,8 +3,8 @@ package snowflake4s
 import weaver.SimpleIOSuite
 import weaver.scalacheck.Checkers
 import org.typelevel.log4cats.Logger
-import cats.effect.IO
 import org.typelevel.log4cats.noop.NoOpLogger
+import cats.effect.IO
 import cats.effect.kernel.Sync
 import cats.effect.kernel.Ref
 import cats.effect.std.Semaphore
