@@ -33,9 +33,14 @@ lazy val core = (project in file("modules/core"))
 lazy val docs = (project in file("modules/docs"))
    .dependsOn(core)
    .enablePlugins(ParadoxPlugin)
+   .enablePlugins(ParadoxSitePlugin)
+   .enablePlugins(GhpagesPlugin)
    .settings(commonSettings)
    .settings(
       scalacOptions := Nil,
+      git.remoteRepo     := "git@github.com:qwbarch/snowflake4s.git",
+      ghpagesNoJekyll    := true,
+      publish / skip     := true,
       paradoxTheme := Some(builtinParadoxTheme("generic")),
       paradoxProperties ++= Map(
          "organization" -> organization.value,
