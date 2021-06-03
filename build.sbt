@@ -59,7 +59,7 @@ lazy val credentialSettings = Seq(
       password <- Option(System.getenv().get("SONATYPE_PASSWORD"))
    } yield Credentials(
       "Sonatype Nexus Repository Manager",
-      "oss.sonatype.org",
+      "s01.oss.sonatype.org",
       username,
       password,
    )).toSeq,
