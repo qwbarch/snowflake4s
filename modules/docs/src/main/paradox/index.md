@@ -49,7 +49,7 @@ IdWorkerBuilder.default[IO]
 
 ## Running tests
 
-To run snowflake4s' unit tests, simply run the following command:
+To run snowflake4s' unit tests, simply enter the following command:
 
 ```
 sbt test
@@ -57,7 +57,7 @@ sbt test
 
 ## Alternative libraries
 - [scala-id-generator](https://github.com/softwaremill/scala-id-generator) - If you're looking to generate snowflake ids imperatively, try out this library from lightbend!
-- [fuuid](https://github.com/davenverse/fuuid) - Looking for something more lightweight? This library is a purely functional library for generating UUID's.
+- [fuuid](https://github.com/davenverse/fuuid) - Looking for something more lightweight? This is a purely functional library for generating UUID's.
 
 ## Credits
 

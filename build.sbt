@@ -113,6 +113,7 @@ lazy val releaseSettings = Seq(
    ),
    publishMavenStyle := true,
    Test / publishArtifact := false,
+   sonatypeCredentialHost := "s01.oss.sonatype.org",
 )
 
 lazy val sharedPublishSettings = Seq(
