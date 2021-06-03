@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+<title>snowflake4s</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content='docs'/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:100normal,100italic,300normal,300italic,400normal,400italic,500normal,500italic,700normal,700italic,900normal,900italicc" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="js/page.js"></script>
+<script type="text/javascript" src="js/warnOldVersion.js"></script>
+<script type="text/javascript" src="js/groups.js"></script>
+<script type="text/javascript" src="js/snippets.js"></script>
+<link rel="stylesheet" type="text/css" href="lib/foundation/dist/foundation.min.css"/>
+<link rel="stylesheet" type="text/css" href="css/page.css"/>
+
+<!--
+<link rel="shortcut icon" href="images/favicon.ico" />
+-->
+</head>
+
+<body>
+<div class="off-canvas-wrapper">
+<div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+
+<div class="off-canvas position-left" id="off-canvas-menu" data-off-canvas>
+<nav class="off-canvas-nav">
+<div class="nav-home">
+<a href="index.html" class="active">
+<span class="home-icon">⌂</span>snowflake4s
+</a>
+<div class="version-number">
+0.0.1
+</div>
+</div>
+<div class="nav-toc">
+<ul>
+</ul>
+</div>
+
+</nav>
+</div>
+
+<div class="off-canvas-content" data-off-canvas-content>
+
+<header class="site-header expanded row">
+<div class="small-12 column">
+<a href="#" class="off-canvas-toggle hide-for-medium" data-toggle="off-canvas-menu"><svg class="svg-icon svg-icon-menu" version="1.1" id="Menu" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"> <path class="svg-icon-menu-path" fill="#53CDEC" d="M16.4,9H3.6C3.048,9,3,9.447,3,10c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,9.447,16.952,9,16.4,9z M16.4,13
+H3.6C3.048,13,3,13.447,3,14c0,0.553,0.048,1,0.6,1H16.4c0.552,0,0.6-0.447,0.6-1C17,13.447,16.952,13,16.4,13z M3.6,7H16.4
+C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.048,7,3.6,7z"/></svg>
+</a>
+<div class="title"><a href="index.html" class="active">snowflake4s</a></div>
+
+<!--
+<a href="https://www.example.com" class="logo show-for-medium">logo</a>
+-->
+</div>
+</header>
+
+<div class="expanded row">
+
+<div class="medium-3 large-2 show-for-medium column">
+<nav class="site-nav">
+<div class="nav-home">
+<a href="index.html" class="active">
+<span class="home-icon">⌂</span>snowflake4s
+</a>
+<div class="version-number">
+0.0.1
+</div>
+</div>
+<div class="nav-toc">
+<ul>
+</ul>
+</div>
+
+</nav>
+</div>
+
+<div class="small-12 medium-9 large-10 column">
+<section class="site-content">
+
+<span id="version-warning"></span>
+
+<div class="page-header row">
+<div class="medium-12 show-for-medium column">
+</div>
+</div>
+
+<div class="page-content row">
+<div class="small-12 large-9 column" id="docs">
+<h1><a href="#snowflake4s" name="snowflake4s" class="anchor"><span class="anchor-link"></span></a>snowflake4s</h1>
+<h2><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h2>
+<p>snowflake4s is a purely functional library used for generating unique ids, using Twitter&rsquo;s snowflake id format.</p><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s" % "0.0.1"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
+  &lt;scala.binary.version&gt;3&lt;/scala.binary.version&gt;
+&lt;/properties&gt;
+&lt;dependencies&gt
+  &lt;dependency&gt;
+    &lt;groupId&gt;io.github.qwbarch&lt;/groupId&gt;
+    &lt;artifactId&gt;snowflake4s_${scala.binary.version}&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1&lt;/version&gt;
+  &lt;/dependency&gt
+&lt;/dependencies&gt;</code></pre></dd><dt>Gradle</dt><dd><pre class="prettyprint"><code class="language-gradle">def versions = [
+  ScalaBinary: "3"
+]
+dependencies {
+  implementation "io.github.qwbarch:snowflake4s_${versions.ScalaBinary}:0.0.1"
+}</code></pre></dd></dl>
+<h2><a href="#quick-example" name="quick-example" class="anchor"><span class="anchor-link"></span></a>Quick example</h2>
+<p>Here is a minimal example to create a snowflake id:</p>
+<pre class="prettyprint"><code class="language-scala">import cats.syntax.all.given
+import cats.effect.IO
+import cats.effect.IOApp
+import cats.effect.std.Console
+import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
+
+object Main extends IOApp.Simple:
+
+   override def run: IO[Unit] =
+      given Logger[IO] = Slf4jLogger.getLogger[IO]
+      for
+         idWorker &lt;- IdWorkerBuilder.default[IO].build
+         id &lt;- idWorker.nextId
+         _ &lt;- Console[IO].println(id)
+      yield ()
+</code></pre>
+<h2><a href="#customizing-id-workers" name="customizing-id-workers" class="anchor"><span class="anchor-link"></span></a>Customizing id workers</h2>
+<p>A custom epoch, sequence, worker id, and data center id can be provided through the <code>IdWorkerBuilder</code>.</p>
+<pre class="prettyprint"><code class="language-scala">IdWorkerBuilder.default[IO]
+   .withWorkerId(0)
+   .withDataCenterId(0)
+   .withEpoch(IdWorker.TwitterEpoch)
+   .withSequence(0)
+   .build
+</code></pre>
+<h2><a href="#running-tests" name="running-tests" class="anchor"><span class="anchor-link"></span></a>Running tests</h2>
+<p>To run snowflake4s&rsquo; unit tests, simply run the following command:</p>
+<pre><code>sbt test
+</code></pre>
+<h2><a href="#alternative-libraries" name="alternative-libraries" class="anchor"><span class="anchor-link"></span></a>Alternative libraries</h2>
+<ul>
+  <li><a href="https://github.com/softwaremill/scala-id-generator">scala-id-generator</a> - If you&rsquo;re looking to generate snowflake ids imperatively, try out this library from lightbend!</li>
+  <li><a href="https://github.com/davenverse/fuuid">fuuid</a> - Looking for something more lightweight? This library is a purely functional library for generating UUID&rsquo;s.</li>
+</ul>
+<h2><a href="#credits" name="credits" class="anchor"><span class="anchor-link"></span></a>Credits</h2>
+<p>Full credits goes to <a href="https://about.twitter.com/">Twitter</a>. Implementation is from Twitter&rsquo;s <a href="https://github.com/twitter-archive/snowflake/blob/updated_deps/src/main/scala/com/twitter/service/snowflake/IdWorker.scala">archives</a>.</p>
+</div>
+<div class="large-3 show-for-large column" data-sticky-container>
+<nav class="sidebar sticky" data-sticky data-anchor="docs" data-sticky-on="large">
+<div class="page-nav">
+<div class="nav-title">On this page:</div>
+<div class="nav-toc">
+<ul>
+  <li><a href="index.html#snowflake4s" class="header">snowflake4s</a>
+  <ul>
+    <li><a href="index.html#overview" class="header">Overview</a></li>
+    <li><a href="index.html#quick-example" class="header">Quick example</a></li>
+    <li><a href="index.html#customizing-id-workers" class="header">Customizing id workers</a></li>
+    <li><a href="index.html#running-tests" class="header">Running tests</a></li>
+    <li><a href="index.html#alternative-libraries" class="header">Alternative libraries</a></li>
+    <li><a href="index.html#credits" class="header">Credits</a></li>
+  </ul></li>
+</ul>
+</div>
+</div>
+</nav>
+</div>
+</div>
+
+</section>
+</div>
+
+</div>
+
+<footer class="site-footer">
+
+<section class="site-footer-nav">
+<div class="expanded row">
+<div class="small-12 large-offset-2 large-10 column">
+<div class="row site-footer-content">
+
+<div class="small-12 medium-4 large-3 text-center column">
+<div class="nav-links">
+<ul>
+<!-- <li><a href="https://www.example.com/products/">Products</a> -->
+</ul>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+
+<section class="site-footer-base">
+<div class="expanded row">
+<div class="small-12 large-offset-2 large-10 column">
+<div class="row site-footer-content">
+
+<div class="small-12 text-center large-9 column">
+
+<!--
+<div class="copyright">
+<span class="text">&copy; 2021</span>
+<a href="https://www.example.com" class="logo">logo</a>
+</div>
+-->
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</footer>
+
+</div>
+</div>
+</div>
+</body>
+
+<script type="text/javascript" src="lib/foundation/dist/foundation.min.js"></script>
+<script type="text/javascript">jQuery(document).foundation();</script>
+<script type="text/javascript" src="js/magellan.js"></script>
+
+<style type="text/css">@import "lib/prettify/prettify.css";</style>
+<script type="text/javascript" src="lib/prettify/prettify.js"></script>
+<script type="text/javascript" src="lib/prettify/lang-scala.js"></script>
+<script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '0.0.1', '')});</script>
+
+
+</html>
