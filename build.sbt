@@ -116,6 +116,7 @@ lazy val releaseSettings = Seq(
    sonatypeCredentialHost := "s01.oss.sonatype.org",
    sonatypeRepository := "https://s01.oss.sonatype.org/service/local",
    versionScheme := Some("semver-spec"),
+   releaseCrossBuild := true,
 )
 
 lazy val sharedPublishSettings = Seq(
