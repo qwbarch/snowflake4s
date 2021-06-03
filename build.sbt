@@ -38,9 +38,9 @@ lazy val docs = (project in file("modules/docs"))
    .settings(commonSettings)
    .settings(
       scalacOptions := Nil,
-      git.remoteRepo     := "git@github.com:qwbarch/snowflake4s.git",
-      ghpagesNoJekyll    := true,
-      publish / skip     := true,
+      git.remoteRepo := "git@github.com:qwbarch/snowflake4s.git",
+      ghpagesNoJekyll := true,
+      publish / skip := true,
       paradoxTheme := Some(builtinParadoxTheme("generic")),
       paradoxProperties ++= Map(
          "organization" -> organization.value,
