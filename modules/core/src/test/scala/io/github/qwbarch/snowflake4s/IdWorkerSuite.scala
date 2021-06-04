@@ -136,7 +136,8 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
   test("Generate id") {
     forall { (workerId: Long, dataCenterId: Long) =>
       for {
-        worker <- IdWorkerBuilder.default[IO]
+        worker <- IdWorkerBuilder
+          .default[IO]
           .withWorkerId(workerId)
           .withDataCenterId(dataCenterId)
           .build
