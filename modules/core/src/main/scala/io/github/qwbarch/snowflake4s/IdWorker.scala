@@ -16,7 +16,7 @@
  *
  * This product includes software developed at Twitter (https://twitter.com/).
  */
-package io.qwbarch.snowflake4s
+package io.github.qwbarch.snowflake4s
 
 import cats.syntax.all._
 import cats.effect.kernel.Sync

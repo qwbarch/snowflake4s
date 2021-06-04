@@ -16,7 +16,7 @@
  *
  * This product includes software developed at Twitter (https://twitter.com/).
  */
-package io.qwbarch.snowflake4s
+package io.github.qwbarch.snowflake4s
 
 import weaver.SimpleIOSuite
 import weaver.scalacheck.Checkers
@@ -27,7 +27,7 @@ import cats.effect.kernel.Sync
 import cats.effect.kernel.Ref
 import cats.effect.std.Semaphore
 import cats.syntax.all._
-import io.qwbarch.snowflake4s.arbitrary._
+import io.github.qwbarch.snowflake4s.arbitrary._
 
 private class EasyTimeWorker[F[_]: Sync: Logger](
     val nextMillis: Ref[F, F[Long]],

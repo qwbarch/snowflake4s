@@ -14,12 +14,11 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package io.qwbarch.snowflake4s
+package io.github.qwbarch.snowflake4s
 
 import org.scalacheck.Arbitrary
-import io.qwbarch.snowflake4s.generator.workerDataCenterIdGen
+import io.github.qwbarch.snowflake4s.generator.workerDataCenterIdGen
 
 object arbitrary {
-
   implicit val workerDataCenterIdArbitrary: Arbitrary[Long] = Arbitrary(workerDataCenterIdGen)
 }
