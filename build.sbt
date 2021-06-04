@@ -37,7 +37,7 @@ lazy val core = (project in file("modules/core"))
         case _ => Nil
       }
     },
-    // Use newtypes for scala 2.12 and 2.13
+    // Use newtypes for scala 2.13
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, 13)) => newType :: Nil
