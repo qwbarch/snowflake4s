@@ -1,18 +1,23 @@
 /**
  * Copyright (c) 2021 qwbarch
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
- * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
- * Software.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
- * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  *
  * This product includes software developed at Twitter (https://twitter.com/).
  */
@@ -131,13 +136,12 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
   test("Generate id") {
     forall { (workerId: Long, dataCenterId: Long) =>
       for {
-        worker <- IdWorkerBuilder
-          .default[IO]
+        worker <- IdWorkerBuilder.default[IO]
           .withWorkerId(workerId)
           .withDataCenterId(dataCenterId)
           .build
         id <- worker.nextId
-      } yield expect(id > 0L)
+      } yield expect(id.value > 0L)
     }
   }
 
@@ -150,7 +154,7 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
           .withDataCenterId(dataCenterId)
           .build
         id <- worker.nextId
-      } yield expect.same((id & WorkerMask) >> 12, workerId)
+      } yield expect.same((id.value & WorkerMask) >> 12, workerId)
     }
   }
 
@@ -163,7 +167,7 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
           .withDataCenterId(dataCenterId)
           .build
         id <- worker.nextId
-      } yield expect((id & DataCenterMask) >> 17L == dataCenterId)
+      } yield expect((id.value & DataCenterMask) >> 17L == dataCenterId)
     }
   }
 
@@ -174,7 +178,7 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
         currentTimeMillis <- IO(System.currentTimeMillis)
         _ <- worker.nextMillis.set(currentTimeMillis.pure[F])
         id <- worker.nextId
-      } yield expect((id & TimeStampMask) >> 22L == currentTimeMillis - worker.epoch)
+      } yield expect((id.value & TimeStampMask) >> 22L == currentTimeMillis - worker.epoch)
     }
   }
 
@@ -189,7 +193,7 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
         ids <- (1 to 100).map(_ => worker.nextId).toList.sequence
         (compareIds, _) = ids
           .foldLeft(success -> 0L) { case ((accumulator, previousId), nextId) =>
-            ((expect(nextId > previousId) && accumulator), nextId)
+            ((expect(nextId.value > previousId) && accumulator), nextId.value)
           }
       } yield compareIds
     }
@@ -230,12 +234,12 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
         a <- worker.sequence.get.map(it => expect.same(0, it))
         b <- worker.time.get.map(it => expect.same(1, it))
         id1 <- worker.nextId
-        c = expect.same(1, id1 >> 22) && expect.same(0, id1 & sequenceMask)
+        c = expect.same(1, id1.value >> 22) && expect.same(0, id1.value & sequenceMask)
 
         d <- worker.sequence.get.map(it => expect.same(0, it))
         e <- worker.time.get.map(it => expect.same(1, it))
         id2 <- worker.nextId
-        f = expect.same(1, id2 >> 22) && expect.same(1, id2 & sequenceMask)
+        f = expect.same(1, id2.value >> 22) && expect.same(1, id2.value & sequenceMask)
 
         // Set time backwards
         _ <- worker.time.set(0)
@@ -245,7 +249,7 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
 
         _ <- worker.time.set(1)
         id3 <- worker.nextId
-        j = expect.same(1, id3 >> 22) && expect.same(2, id3 & sequenceMask)
+        j = expect.same(1, id3.value >> 22) && expect.same(2, id3.value & sequenceMask)
       } yield a && b && c && d && e && f && g && h && i && j
     }
   }

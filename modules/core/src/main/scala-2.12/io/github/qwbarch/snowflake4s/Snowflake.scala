@@ -21,8 +21,26 @@
  */
 package io.github.qwbarch.snowflake4s
 
-import org.scalacheck.Gen
+/**
+ * A 64-bit unique identifier with a timestamp.
+ */
+final class Snowflake(val value: Long) extends AnyVal
 
-object generator {
-  val workerDataCenterIdGen: Gen[Long] = Gen.choose(0L, IdWorker.MaxWorkerId)
+object Snowflake {
+
+  /**
+   * Constructs a new [[Snowflake]].
+   *
+   * @param value The underlying id as a [[Long]].
+   * @return A snowflake type with zero run-time overhead.
+   */
+  def apply(value: Long): Snowflake = new Snowflake(value)
+
+  /**
+   * Destructure the snowflake for pattern-matching.
+   *
+   * @param snowflake The snowflake id to destructure.
+   * @return An option containing the underlying [[Long]].
+   */
+  def unapply(snowflake: Snowflake): Option[Long] = Some(snowflake.value)
 }

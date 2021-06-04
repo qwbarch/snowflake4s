@@ -19,10 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package io.github.qwbarch.snowflake4s
+package io.github.qwbarch
 
-import org.scalacheck.Gen
+import io.estatico.newtype.macros.newtype
 
-object generator {
-  val workerDataCenterIdGen: Gen[Long] = Gen.choose(0L, IdWorker.MaxWorkerId)
+package object snowflake4s {
+
+  /**
+   * A 64-bit unique identifier with a timestamp.
+   */
+  @newtype case class Snowflake(value: Long)
+
+  object Snowflake {
+
+    /**
+     * Destructure the snowflake for pattern-matching.
+     *
+     * @param snowflake The snowflake id to destructure.
+     * @return An option containing the underlying [[Long]].
+     */
+    def unapply(snowflake: Snowflake): Option[Long] = Some(snowflake.value)
+  }
 }

@@ -21,4 +21,7 @@ object Dependency {
    private val weaver = dependency("com.disneystreaming")(Version.weaver)(true) _
    val weaverCats = weaver("weaver-cats")
    val weaverScalaCheck = weaver("weaver-scalacheck")
+
+   val macroParadise = "org.scalamacros" % "paradise" % Version.macroParadise
+   val newType = "io.estatico" %% "newtype" % Version.newType
 }

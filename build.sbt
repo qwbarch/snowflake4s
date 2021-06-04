@@ -3,7 +3,7 @@ import ReleaseTransformations._
 
 lazy val commonSettings = Seq(
   organization := "io.github.qwbarch",
-  scalaVersion := "3.0.0",
+  scalaVersion := "2.12.14",
   crossScalaVersions := Seq("3.0.0", "2.13.6", "2.12.14"),
 )
 
@@ -30,6 +30,27 @@ lazy val core = (project in file("modules/core"))
       weaverCats % Test,
       weaverScalaCheck % Test,
     ),
+    // Enable Ymacro-annotations for scala 2.13, required for newtypes
+    scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 13)) => "-Ymacro-annotations" :: Nil
+        case _ => Nil
+      }
+    },
+    // Use newtypes for scala 2.12 and 2.13
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 13)) => newType :: Nil
+        case _ => Nil
+      }
+    },
+    // Enable some scala 3 syntax for scala 2.12 and 2.13
+    scalacOptions ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, n)) if n >= 12 => "-Xsource:3" :: Nil
+        case _ => Nil
+      }
+    },
   )
 
 lazy val docs = (project in file("modules/docs"))
