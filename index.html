@@ -31,7 +31,7 @@
 <span class="home-icon">⌂</span>snowflake4s
 </a>
 <div class="version-number">
-0.0.1
+0.0.2*
 </div>
 </div>
 <div class="nav-toc">
@@ -67,7 +67,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <span class="home-icon">⌂</span>snowflake4s
 </a>
 <div class="version-number">
-0.0.1
+0.0.2*
 </div>
 </div>
 <div class="nav-toc">
@@ -92,20 +92,21 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="small-12 large-9 column" id="docs">
 <h1><a href="#snowflake4s" name="snowflake4s" class="anchor"><span class="anchor-link"></span></a>snowflake4s</h1>
 <h2><a href="#overview" name="overview" class="anchor"><span class="anchor-link"></span></a>Overview</h2>
-<p>snowflake4s is a purely functional library used for generating unique ids, using Twitter&rsquo;s snowflake id format.</p><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s" % "0.0.1"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
+<p><img src="https://img.shields.io/github/workflow/status/qwbarch/snowflake4s/Scala%20CI?logo=github" alt="GitHub Workflow Status" /> <img src="https://img.shields.io/maven-central/v/io.github.qwbarch/snowflake4s" alt="Maven Central" /> <a href="https://javadoc.io/doc/io.github.qwbarch/snowflake4s"><img src="https://javadoc.io/badge2/io.github.qwbarch/snowflake4s/scaladoc.svg" alt="javadoc" /></a> <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green" alt="license" /></a> <a href="https://scala-steward.org"><img src="https://img.shields.io/badge/Scala_Steward-helping-blue.svg?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAMAAAARSr4IAAAAVFBMVEUAAACHjojlOy5NWlrKzcYRKjGFjIbp293YycuLa3pYY2LSqql4f3pCUFTgSjNodYRmcXUsPD/NTTbjRS+2jomhgnzNc223cGvZS0HaSD0XLjbaSjElhIr+AAAAAXRSTlMAQObYZgAAAHlJREFUCNdNyosOwyAIhWHAQS1Vt7a77/3fcxxdmv0xwmckutAR1nkm4ggbyEcg/wWmlGLDAA3oL50xi6fk5ffZ3E2E3QfZDCcCN2YtbEWZt+Drc6u6rlqv7Uk0LdKqqr5rk2UCRXOk0vmQKGfc94nOJyQjouF9H/wCc9gECEYfONoAAAAASUVORK5CYII=" alt="Scala Steward badge" /></a></p>
+<p>snowflake4s is a purely functional library used for generating unique ids, using Twitter&rsquo;s snowflake id format.</p><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s" % "0.0.2-SNAPSHOT"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
   &lt;scala.binary.version&gt;3&lt;/scala.binary.version&gt;
 &lt;/properties&gt;
 &lt;dependencies&gt
   &lt;dependency&gt;
     &lt;groupId&gt;io.github.qwbarch&lt;/groupId&gt;
     &lt;artifactId&gt;snowflake4s_${scala.binary.version}&lt;/artifactId&gt;
-    &lt;version&gt;0.0.1&lt;/version&gt;
+    &lt;version&gt;0.0.2-SNAPSHOT&lt;/version&gt;
   &lt;/dependency&gt
 &lt;/dependencies&gt;</code></pre></dd><dt>Gradle</dt><dd><pre class="prettyprint"><code class="language-gradle">def versions = [
   ScalaBinary: "3"
 ]
 dependencies {
-  implementation "io.github.qwbarch:snowflake4s_${versions.ScalaBinary}:0.0.1"
+  implementation "io.github.qwbarch:snowflake4s_${versions.ScalaBinary}:0.0.2-SNAPSHOT"
 }</code></pre></dd></dl>
 <h2><a href="#quick-example" name="quick-example" class="anchor"><span class="anchor-link"></span></a>Quick example</h2>
 <p>Here is a minimal example to create a snowflake id (Scala 3):</p>
@@ -229,7 +230,7 @@ object Main extends IOApp.Simple:
 <script type="text/javascript" src="lib/prettify/prettify.js"></script>
 <script type="text/javascript" src="lib/prettify/lang-scala.js"></script>
 <script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
-<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '0.0.1', '')});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '0.0.2-SNAPSHOT', '')});</script>
 
 
 </html>
