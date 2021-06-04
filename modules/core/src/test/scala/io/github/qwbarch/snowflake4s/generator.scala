@@ -25,4 +25,5 @@ import org.scalacheck.Gen
 
 object generator {
   val workerDataCenterIdGen: Gen[Long] = Gen.choose(0L, IdWorker.MaxWorkerId)
+  val snowflakeGen: Gen[Snowflake] = Gen.long.map(Snowflake.apply)
 }

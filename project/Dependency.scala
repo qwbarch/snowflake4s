@@ -24,4 +24,5 @@ object Dependency {
 
    val macroParadise = "org.scalamacros" % "paradise" % Version.macroParadise
    val newType = "io.estatico" %% "newtype" % Version.newType
+   val circeCore = "io.circe" %% "circe-core" % Version.circe
 }

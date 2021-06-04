@@ -1,56 +1,64 @@
 import Dependency._
 import ReleaseTransformations._
 
-lazy val commonSettings = Seq(
+lazy val commonSettings: Seq[SettingsDefinition] = Seq(
   organization := "io.github.qwbarch",
-  scalaVersion := "2.12.14",
+  scalaVersion := "3.0.0",
   crossScalaVersions := Seq("3.0.0", "2.13.6", "2.12.14"),
+  testFrameworks += new TestFramework("weaver.framework.CatsEffect"),
+  libraryDependencies ++= Seq(
+    log4CatsNoOp % Test,
+    weaverCats % Test,
+    weaverScalaCheck % Test,
+  ),
+  // Enable Ymacro-annotations for scala 2.13, required for newtypes
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 13)) => "-Ymacro-annotations" :: Nil
+      case _ => Nil
+    }
+  },
+  // Use newtypes for scala 2.13
+  libraryDependencies ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 13)) => newType :: Nil
+      case _ => Nil
+    }
+  },
+  // Enable some scala 3 syntax for scala 2.12 and 2.13
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, n)) if n >= 12 => "-Xsource:3" :: Nil
+      case _ => Nil
+    }
+  },
 )
 
 lazy val root = (project in file("."))
-  .settings(commonSettings ++ noPublishSettings ++ releaseSettings)
-  .settings(
-    Compile / unmanagedSourceDirectories := Nil,
-    Test / unmanagedSourceDirectories := Nil,
-  )
-  .aggregate(core)
+  .settings(commonSettings ++ noPublishSettings ++ releaseSettings: _*)
+  .aggregate(core, circe)
 
 lazy val core = (project in file("modules/core"))
-  .settings(commonSettings ++ publishSettings)
+  .settings(commonSettings ++ publishSettings: _*)
   .settings(
     name := "snowflake4s",
-    testFrameworks += new TestFramework("weaver.framework.CatsEffect"),
     libraryDependencies ++= Seq(
       catsCore,
       catsKernel,
       catsEffectStd,
       catsEffectKernel,
       log4CatsCore,
-      log4CatsNoOp % Test,
-      weaverCats % Test,
-      weaverScalaCheck % Test,
     ),
-    // Enable Ymacro-annotations for scala 2.13, required for newtypes
-    scalacOptions ++= {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 13)) => "-Ymacro-annotations" :: Nil
-        case _ => Nil
-      }
-    },
-    // Use newtypes for scala 2.13
-    libraryDependencies ++= {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 13)) => newType :: Nil
-        case _ => Nil
-      }
-    },
-    // Enable some scala 3 syntax for scala 2.12 and 2.13
-    scalacOptions ++= {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, n)) if n >= 12 => "-Xsource:3" :: Nil
-        case _ => Nil
-      }
-    },
+  )
+
+lazy val circe = (project in file("modules/circe"))
+  .dependsOn(core % "compile->compile;test->test")
+  .settings(commonSettings ++ publishSettings: _*)
+  .settings(
+    name := "snowflake4s-circe",
+    libraryDependencies ++= Seq(
+      circeCore,
+    ),
   )
 
 lazy val docs = (project in file("modules/docs"))
@@ -58,7 +66,7 @@ lazy val docs = (project in file("modules/docs"))
   .enablePlugins(ParadoxPlugin)
   .enablePlugins(ParadoxSitePlugin)
   .enablePlugins(GhpagesPlugin)
-  .settings(commonSettings ++ noPublishSettings)
+  .settings(commonSettings ++ noPublishSettings: _*)
   .settings(
     scalacOptions := Nil,
     git.remoteRepo := "git@github.com:qwbarch/snowflake4s.git",

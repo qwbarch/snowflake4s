@@ -23,7 +23,9 @@ package io.github.qwbarch.snowflake4s
 
 import org.scalacheck.Arbitrary
 import io.github.qwbarch.snowflake4s.generator.workerDataCenterIdGen
+import io.github.qwbarch.snowflake4s.generator.snowflakeGen
 
 object arbitrary {
   implicit val workerDataCenterIdArbitrary: Arbitrary[Long] = Arbitrary(workerDataCenterIdGen)
+  implicit val snowflakeArbitrary: Arbitrary[Snowflake] = Arbitrary(snowflakeGen)
 }

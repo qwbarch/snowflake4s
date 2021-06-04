@@ -20,40 +20,16 @@
  * SOFTWARE.
  */
 package io.github.qwbarch.snowflake4s
-import scala.util.Try
-import cats.Show
-import cats.kernel.Eq
 
-/**
- * A 64-bit unique identifier with a timestamp.
- */
-final class Snowflake(val value: Long) extends AnyVal
+import io.circe.Decoder
+import io.circe.Encoder
+import io.circe.KeyDecoder
+import io.circe.KeyEncoder
 
-object Snowflake {
-  implicit val showSnowflake: Show[Snowflake] = Show.fromToString
-  implicit val eqSnowflake: Eq[Snowflake] = Eq.fromUniversalEquals
+object circe {
+  implicit val snowflakeDecoder: Decoder[Snowflake] = Decoder[Long].map(Snowflake.apply)
+  implicit val snowflakeEncoder: Encoder[Snowflake] = Encoder.encodeLong.contramap(_.value)
 
-  /**
-   * Constructs a new [[Snowflake]].
-   *
-   * @param value The underlying id as a [[Long]].
-   * @return A snowflake type with zero run-time overhead.
-   */
-  def apply(value: Long): Snowflake = new Snowflake(value)
-
-  /**
-   * Destructure the snowflake for pattern-matching.
-   *
-   * @param snowflake The snowflake id to destructure.
-   * @return An option containing the underlying [[Long]].
-   */
-  def unapply(snowflake: Snowflake): Option[Long] = Some(snowflake.value)
-
-  /**
-   * Constructs a new [[Snowflake]] from a string.
-   *
-   * @param string The string to parse into a snowflake.
-   * @return The snowflake, if the string is a valid long.
-   */
-  def fromString(string: String): Option[Snowflake] = Try(string.toLong).toOption.map(Snowflake.apply)
+  implicit val snowflakeKeyDecoder: KeyDecoder[Snowflake] = KeyDecoder.instance(Snowflake.fromString(_))
+  implicit val snowflakeKeyEncoder: KeyEncoder[Snowflake] = KeyEncoder.instance(_.value.toString)
 }

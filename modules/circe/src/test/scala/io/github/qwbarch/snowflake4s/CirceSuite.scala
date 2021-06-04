@@ -20,40 +20,24 @@
  * SOFTWARE.
  */
 package io.github.qwbarch.snowflake4s
-import scala.util.Try
-import cats.Show
-import cats.kernel.Eq
 
-/**
- * A 64-bit unique identifier with a timestamp.
- */
-final class Snowflake(val value: Long) extends AnyVal
+import weaver.SimpleIOSuite
+import weaver.scalacheck.Checkers
+import io.circe.syntax._
+import io.github.qwbarch.snowflake4s.arbitrary._
+import io.github.qwbarch.snowflake4s.circe._
 
-object Snowflake {
-  implicit val showSnowflake: Show[Snowflake] = Show.fromToString
-  implicit val eqSnowflake: Eq[Snowflake] = Eq.fromUniversalEquals
+object CirceSuite extends SimpleIOSuite with Checkers {
 
-  /**
-   * Constructs a new [[Snowflake]].
-   *
-   * @param value The underlying id as a [[Long]].
-   * @return A snowflake type with zero run-time overhead.
-   */
-  def apply(value: Long): Snowflake = new Snowflake(value)
+  test("Snowflake serialization") {
+    forall { (snowflake: Snowflake) =>
+      expect(snowflake.asJson.as[Snowflake].contains(snowflake))
+    }
+  }
 
-  /**
-   * Destructure the snowflake for pattern-matching.
-   *
-   * @param snowflake The snowflake id to destructure.
-   * @return An option containing the underlying [[Long]].
-   */
-  def unapply(snowflake: Snowflake): Option[Long] = Some(snowflake.value)
-
-  /**
-   * Constructs a new [[Snowflake]] from a string.
-   *
-   * @param string The string to parse into a snowflake.
-   * @return The snowflake, if the string is a valid long.
-   */
-  def fromString(string: String): Option[Snowflake] = Try(string.toLong).toOption.map(Snowflake.apply)
+  test("Snowflake key serialization") {
+    forall { (snowflake: Snowflake) =>
+      expect(Map(snowflake -> snowflake).asJson.as[Map[Snowflake, Snowflake]].contains(Map(snowflake -> snowflake)))
+    }
+  }
 }

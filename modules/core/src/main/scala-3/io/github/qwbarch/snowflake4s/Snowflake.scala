@@ -21,12 +21,18 @@
  */
 package io.github.qwbarch.snowflake4s
 
+import scala.util.Try
+import cats.Show
+import cats.kernel.Eq
+
 /**
  * A 64-bit unique identifier with a timestamp.
  */
 opaque type Snowflake = Long
 
 object Snowflake:
+  given showSnowflake: Show[Snowflake] = Show.fromToString
+  given eqSnowflake: Eq[Snowflake] = Eq.fromUniversalEquals
 
   /**
    * Constructs a new [[Snowflake]].
@@ -43,6 +49,14 @@ object Snowflake:
    * @return An option containing the underlying [[Long]].
    */
   def unapply(snowflake: Snowflake): Option[Long] = Some(snowflake)
+
+  /**
+   * Constructs a new [[Snowflake]] from a string.
+   *
+   * @param string The string to parse into a snowflake.
+   * @return The snowflake, if the string is a valid long.
+   */
+  def fromString(string: String): Option[Snowflake] = Try(string.toLong).toOption
 
 extension (snowflake: Snowflake)
   /**

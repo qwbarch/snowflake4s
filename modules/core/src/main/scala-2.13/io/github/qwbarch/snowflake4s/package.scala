@@ -22,6 +22,9 @@
 package io.github.qwbarch
 
 import io.estatico.newtype.macros.newtype
+import scala.util.Try
+import cats.Show
+import cats.kernel.Eq
 
 package object snowflake4s {
 
@@ -31,6 +34,8 @@ package object snowflake4s {
   @newtype case class Snowflake(value: Long)
 
   object Snowflake {
+    implicit val showSnowflake: Show[Snowflake] = Show.fromToString
+    implicit val eqSnowflake: Eq[Snowflake] = Eq.fromUniversalEquals
 
     /**
      * Destructure the snowflake for pattern-matching.
@@ -39,5 +44,13 @@ package object snowflake4s {
      * @return An option containing the underlying [[Long]].
      */
     def unapply(snowflake: Snowflake): Option[Long] = Some(snowflake.value)
+
+    /**
+     * Constructs a new [[Snowflake]] from a string.
+     *
+     * @param string The string to parse into a snowflake.
+     * @return The snowflake, if the string is a valid long.
+     */
+    def fromString(string: String): Option[Snowflake] = Try(string.toLong).toOption.map(Snowflake.apply)
   }
 }
