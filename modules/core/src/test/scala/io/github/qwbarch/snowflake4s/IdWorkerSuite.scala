@@ -254,4 +254,19 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
       } yield a && b && c && d && e && f && g && h && i && j
     }
   }
+
+  test("Extract timestamp from id") {
+    forall { (workerId: Long, dataCenterId: Long) =>
+      for {
+        worker <- IdWorkerBuilder
+          .default[IO]
+          .withWorkerId(workerId)
+          .withDataCenterId(dataCenterId)
+          .build
+        timeStamp <- IO(System.currentTimeMillis)
+        id = worker.nextIdPure(timeStamp, 0)
+        timeStamp2 = worker.getTimeStamp(id)
+      } yield expect.same(timeStamp, timeStamp2)
+    }
+  }
 }

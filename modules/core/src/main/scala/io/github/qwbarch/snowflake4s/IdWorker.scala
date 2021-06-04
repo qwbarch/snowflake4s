@@ -63,10 +63,31 @@ class IdWorker[F[_]: Sync: Logger](
     currentTimeMillis.iterateWhile(_ <= lastTimeStamp)
 
   /**
+   * Extracts the timestamp of a snowflake.
+   *
+   * @param snowflake The snowflake to extract from.
+   * @return The timestamp of the snowflake.
+   */
+  def getTimeStamp(snowflake: Snowflake): Long = epoch + (snowflake.value >> TimeStampLeftShift)
+
+  /**
+   * Constructs a new [[Snowflake]] from the given timestamp and sequence.
+   *
+   * @param timeStamp The timestamp of the snowflake.
+   * @param sequence The sequence of the snowflake.
+   */
+  def nextIdPure(timeStamp: Long, sequence: Long): Snowflake =
+    Snowflake(
+      ((timeStamp - epoch) << TimeStampLeftShift) |
+        (dataCenterId << DataCenterIdShift) |
+        (workerId << WorkerIdShift) |
+        sequence,
+    )
+
+  /**
    * Generates a new snowflake id.
    *
-   * @return
-   *   A new snowflake id.
+   * @return A new snowflake id.
    */
   val nextId: F[Snowflake] =
     semaphore.permit.use(_ =>
@@ -94,11 +115,7 @@ class IdWorker[F[_]: Sync: Logger](
           else sequence.set(0).as(currentTimeMillis)
         _ <- this.lastTimeStamp.set(timeStamp)
         sequence <- sequence.get
-        id = ((timeStamp - epoch) << TimeStampLeftShift) |
-          (dataCenterId << DataCenterIdShift) |
-          (workerId << WorkerIdShift) |
-          sequence
-      } yield Snowflake(id),
+      } yield nextIdPure(timeStamp, sequence),
     )
 }
 

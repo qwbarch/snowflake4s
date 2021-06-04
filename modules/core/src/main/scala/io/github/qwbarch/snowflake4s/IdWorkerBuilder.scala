@@ -28,6 +28,9 @@ import cats.effect.kernel.Async
 import cats.effect.kernel.Ref
 import cats.effect.std.Semaphore
 
+/**
+ * A builder for creating instances of [[IdWorker]].
+ */
 final class IdWorkerBuilder[F[_]: Async: Logger](
     workerId: Long,
     dataCenterId: Long,
@@ -57,26 +60,40 @@ final class IdWorkerBuilder[F[_]: Async: Logger](
 
   /**
    * Sets the worker's id.
+   *
+   * @param workerId The worker id.
+   * @return A new builder with the provided worker id.
    */
   def withWorkerId(workerId: Long): IdWorkerBuilder[F] = copy(workerId = workerId)
 
   /**
    * Sets the worker's data center id.
+   *
+   * @param dataCenterId The data center id.
+   * @return A new builder with the provided data center id.
    */
   def withDataCenterId(dataCenterId: Long): IdWorkerBuilder[F] = copy(dataCenterId = dataCenterId)
 
   /**
    * Sets the epoch used for generating ids.
+   *
+   * @param epoch The epoch.
+   * @return A new builder with the provided epoch.
    */
   def withEpoch(epoch: Long): IdWorkerBuilder[F] = copy(epoch = epoch)
 
   /**
    * Sets the sequence id.
+   *
+   * @param sequence The sequence.
+   * @return A new sequence with the provided sequence.
    */
   def withSequence(sequence: Long): IdWorkerBuilder[F] = copy(sequence = sequence)
 
   /**
    * Creates a new id worker using the builder's arguments.
+   *
+   * @return An id worker with the provided builder arguments.
    */
   def build: F[IdWorker[F]] =
     for {
@@ -101,6 +118,11 @@ final class IdWorkerBuilder[F[_]: Async: Logger](
 object IdWorkerBuilder {
   private val hashSeed = MurmurHash3.stringHash("IdWorkerBuilder")
 
+  /**
+   * The default builder arguments.
+   *
+   * @return A new builder with the default arguments.
+   */
   def default[F[_]: Async: Logger]: IdWorkerBuilder[F] = new IdWorkerBuilder(
     workerId = 0,
     dataCenterId = 0,
