@@ -19,13 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package io.github.qwbarch.snowflake4s
+package io.github.qwbarch.snowflake4s.circe
 
 import weaver.SimpleIOSuite
 import weaver.scalacheck.Checkers
 import io.circe.syntax._
 import io.github.qwbarch.snowflake4s.arbitrary._
-import io.github.qwbarch.snowflake4s.circe._
+import io.github.qwbarch.snowflake4s.circe.syntax._
+import io.github.qwbarch.snowflake4s.Snowflake
 
 object CirceSuite extends SimpleIOSuite with Checkers {
 

@@ -58,10 +58,10 @@ object Snowflake:
    */
   def fromString(string: String): Option[Snowflake] = Try(string.toLong).toOption
 
-extension (snowflake: Snowflake)
-  /**
-   * Retrieve the underlying value.
-   *
-   * @return The snowflake id as a [[Long]].
-   */
-  def value: Long = snowflake
+  extension (snowflake: Snowflake)
+    /**
+     * Retrieve the underlying value.
+     *
+     * @return The snowflake id as a [[Long]].
+     */
+    def value: Long = snowflake

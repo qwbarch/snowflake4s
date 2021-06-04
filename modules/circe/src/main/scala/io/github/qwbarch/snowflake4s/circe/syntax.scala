@@ -19,14 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package io.github.qwbarch.snowflake4s
+package io.github.qwbarch.snowflake4s.circe
 
 import io.circe.Decoder
 import io.circe.Encoder
 import io.circe.KeyDecoder
 import io.circe.KeyEncoder
+import io.github.qwbarch.snowflake4s.Snowflake
 
-object circe {
+object syntax {
   implicit val snowflakeDecoder: Decoder[Snowflake] = Decoder[Long].map(Snowflake.apply)
   implicit val snowflakeEncoder: Encoder[Snowflake] = Encoder.encodeLong.contramap(_.value)
 
