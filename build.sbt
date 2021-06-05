@@ -28,7 +28,11 @@ lazy val commonSettings: Seq[SettingsDefinition] = Seq(
 )
 
 lazy val root = (project in file("."))
-  .settings(noPublishSettings ++ releaseSettings)
+  .settings(commonSettings ++ noPublishSettings ++ releaseSettings: _*)
+  .settings(
+    Compile / unmanagedSourceDirectories := Nil,
+    Test / unmanagedSourceDirectories := Nil,
+  )
   .aggregate(core, circe, skunk, http4s)
 
 lazy val core = (project in file("modules/core"))
