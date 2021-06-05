@@ -31,7 +31,7 @@
 <span class="home-icon">⌂</span>snowflake4s
 </a>
 <div class="version-number">
-1.1.0-M1
+1.1.0-M2
 </div>
 </div>
 <div class="nav-toc">
@@ -68,7 +68,7 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <span class="home-icon">⌂</span>snowflake4s
 </a>
 <div class="version-number">
-1.1.0-M1
+1.1.0-M2
 </div>
 </div>
 <div class="nav-toc">
@@ -100,20 +100,20 @@ C16.952,7,17,6.553,17,6c0-0.553-0.048-1-0.6-1H3.6C3.048,5,3,5.447,3,6C3,6.553,3.
 <div class="small-12 large-9 column" id="docs">
 <h1><a href="#library-integration" name="library-integration" class="anchor"><span class="anchor-link"></span></a>Library Integration</h1>
 <p>This section shows examples on how to integrate snowflake4s with other libraries.</p>
-<h2><a href="#circe" name="circe" class="anchor"><span class="anchor-link"></span></a>Circe</h2><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s-circe" % "1.1.0-M1"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
+<h2><a href="#circe" name="circe" class="anchor"><span class="anchor-link"></span></a>Circe</h2><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s-circe" % "1.1.0-M2"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
   &lt;scala.binary.version&gt;3&lt;/scala.binary.version&gt;
 &lt;/properties&gt;
 &lt;dependencies&gt
   &lt;dependency&gt;
     &lt;groupId&gt;io.github.qwbarch&lt;/groupId&gt;
     &lt;artifactId&gt;snowflake4s-circe_${scala.binary.version}&lt;/artifactId&gt;
-    &lt;version&gt;1.1.0-M1&lt;/version&gt;
+    &lt;version&gt;1.1.0-M2&lt;/version&gt;
   &lt;/dependency&gt
 &lt;/dependencies&gt;</code></pre></dd><dt>Gradle</dt><dd><pre class="prettyprint"><code class="language-gradle">def versions = [
   ScalaBinary: "3"
 ]
 dependencies {
-  implementation "io.github.qwbarch:snowflake4s-circe_${versions.ScalaBinary}:1.1.0-M1"
+  implementation "io.github.qwbarch:snowflake4s-circe_${versions.ScalaBinary}:1.1.0-M2"
 }</code></pre></dd></dl>
 <p>The circe module provides an encoder/decoder for snowflakes.</p>
 <pre class="prettyprint"><code class="language-scala">import io.circe.syntax.given
@@ -124,20 +124,20 @@ val snowflake = Snowflake(123456789L)
 val encoded = snowflake.asJson
 val decoded = encoded.as[Snowflake]
 </code></pre>
-<h2><a href="#skunk" name="skunk" class="anchor"><span class="anchor-link"></span></a>Skunk</h2><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s-skunk" % "1.1.0-M1"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
+<h2><a href="#skunk" name="skunk" class="anchor"><span class="anchor-link"></span></a>Skunk</h2><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s-skunk" % "1.1.0-M2"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
   &lt;scala.binary.version&gt;3&lt;/scala.binary.version&gt;
 &lt;/properties&gt;
 &lt;dependencies&gt
   &lt;dependency&gt;
     &lt;groupId&gt;io.github.qwbarch&lt;/groupId&gt;
     &lt;artifactId&gt;snowflake4s-skunk_${scala.binary.version}&lt;/artifactId&gt;
-    &lt;version&gt;1.1.0-M1&lt;/version&gt;
+    &lt;version&gt;1.1.0-M2&lt;/version&gt;
   &lt;/dependency&gt
 &lt;/dependencies&gt;</code></pre></dd><dt>Gradle</dt><dd><pre class="prettyprint"><code class="language-gradle">def versions = [
   ScalaBinary: "3"
 ]
 dependencies {
-  implementation "io.github.qwbarch:snowflake4s-skunk_${versions.ScalaBinary}:1.1.0-M1"
+  implementation "io.github.qwbarch:snowflake4s-skunk_${versions.ScalaBinary}:1.1.0-M2"
 }</code></pre></dd></dl>
 <p>The skunk module provides a codec for snowflakes.</p>
 <pre class="prettyprint"><code class="language-scala">import skunk.Command
@@ -146,20 +146,20 @@ import io.github.qwbarch.snowflake4s.skunk.codec.snowflake
 
 val command: Command[Snowflake] = sql&quot;DELETE FROM messages WHERE id=$snowflake&quot;.command
 </code></pre>
-<h2><a href="#http4s" name="http4s" class="anchor"><span class="anchor-link"></span></a>Http4s</h2><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s-http4s" % "1.1.0-M1"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
+<h2><a href="#http4s" name="http4s" class="anchor"><span class="anchor-link"></span></a>Http4s</h2><dl class="dependency"><dt>sbt</dt><dd><pre class="prettyprint"><code class="language-scala">libraryDependencies += "io.github.qwbarch" %% "snowflake4s-http4s" % "1.1.0-M2"</code></pre></dd><dt>Maven</dt><dd><pre class="prettyprint"><code class="language-xml">&lt;properties&gt;
   &lt;scala.binary.version&gt;3&lt;/scala.binary.version&gt;
 &lt;/properties&gt;
 &lt;dependencies&gt
   &lt;dependency&gt;
     &lt;groupId&gt;io.github.qwbarch&lt;/groupId&gt;
     &lt;artifactId&gt;snowflake4s-http4s_${scala.binary.version}&lt;/artifactId&gt;
-    &lt;version&gt;1.1.0-M1&lt;/version&gt;
+    &lt;version&gt;1.1.0-M2&lt;/version&gt;
   &lt;/dependency&gt
 &lt;/dependencies&gt;</code></pre></dd><dt>Gradle</dt><dd><pre class="prettyprint"><code class="language-gradle">def versions = [
   ScalaBinary: "3"
 ]
 dependencies {
-  implementation "io.github.qwbarch:snowflake4s-http4s_${versions.ScalaBinary}:1.1.0-M1"
+  implementation "io.github.qwbarch:snowflake4s-http4s_${versions.ScalaBinary}:1.1.0-M2"
 }</code></pre></dd></dl>
 <p>The http4s module provides an extractor for handling path parameters, as well as an implicit required for a query parameter matcher.</p>
 <pre class="prettyprint"><code class="language-scala">import org.http4s.dsl.io.*
@@ -253,7 +253,7 @@ val routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
 <script type="text/javascript" src="../lib/prettify/prettify.js"></script>
 <script type="text/javascript" src="../lib/prettify/lang-scala.js"></script>
 <script type="text/javascript">jQuery(function(){window.prettyPrint && prettyPrint()});</script>
-<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '1.1.0-M1', '')});</script>
+<script type="text/javascript">jQuery(function(jq){initOldVersionWarnings(jq, '1.1.0-M2', '')});</script>
 
 
 </html>
