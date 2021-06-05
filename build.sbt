@@ -18,13 +18,6 @@ lazy val commonSettings: Seq[SettingsDefinition] = Seq(
       case _ => Nil
     }
   },
-  // Use newtypes for scala 2.13
-  libraryDependencies ++= {
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, 13)) => newType :: Nil
-      case _ => Nil
-    }
-  },
   // Enable some scala 3 syntax for scala 2.12 and 2.13
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
@@ -35,7 +28,7 @@ lazy val commonSettings: Seq[SettingsDefinition] = Seq(
 )
 
 lazy val root = (project in file("."))
-  .settings(commonSettings ++ noPublishSettings ++ releaseSettings: _*)
+  .settings(noPublishSettings ++ releaseSettings)
   .aggregate(core, circe, skunk)
 
 lazy val core = (project in file("modules/core"))
@@ -49,6 +42,13 @@ lazy val core = (project in file("modules/core"))
       catsEffectKernel,
       log4CatsCore,
     ),
+    // Use newtypes for scala 2.13
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 13)) => newType :: Nil
+        case _ => Nil
+      }
+    },
   )
 
 lazy val circe = (project in file("modules/circe"))
