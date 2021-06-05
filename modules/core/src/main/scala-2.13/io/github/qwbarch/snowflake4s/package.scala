@@ -41,7 +41,7 @@ package object snowflake4s {
      * Destructure the snowflake for pattern-matching.
      *
      * @param snowflake The snowflake id to destructure.
-     * @return An option containing the underlying [[Long]].
+     * @return An option containing the underlying value.
      */
     def unapply(snowflake: Snowflake): Option[Long] = Some(snowflake.value)
 

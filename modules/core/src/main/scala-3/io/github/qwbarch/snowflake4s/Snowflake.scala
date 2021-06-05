@@ -37,7 +37,7 @@ object Snowflake:
   /**
    * Constructs a new [[Snowflake]].
    *
-   * @param value The underlying id as a [[Long]].
+   * @param value The underlying id as a 64-bit integer.
    * @return A snowflake type with zero run-time overhead.
    */
   def apply(value: Long): Snowflake = value
@@ -46,7 +46,7 @@ object Snowflake:
    * Destructure the snowflake for pattern-matching.
    *
    * @param snowflake The snowflake id to destructure.
-   * @return An option containing the underlying [[Long]].
+   * @return An option containing the underlying value.
    */
   def unapply(snowflake: Snowflake): Option[Long] = Some(snowflake)
 
@@ -62,6 +62,6 @@ object Snowflake:
     /**
      * Retrieve the underlying value.
      *
-     * @return The snowflake id as a [[Long]].
+     * @return The snowflake id as a 64-bit integer.
      */
     def value: Long = snowflake
