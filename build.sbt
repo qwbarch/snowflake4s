@@ -29,7 +29,7 @@ lazy val commonSettings: Seq[SettingsDefinition] = Seq(
 
 lazy val root = (project in file("."))
   .settings(noPublishSettings ++ releaseSettings)
-  .aggregate(core, circe, skunk)
+  .aggregate(core, circe, skunk, http4s)
 
 lazy val core = (project in file("modules/core"))
   .settings(commonSettings ++ publishSettings: _*)
@@ -65,6 +65,19 @@ lazy val skunk = (project in file("modules/skunk"))
   .settings(
     name := "snowflake4s-skunk",
     libraryDependencies += skunkCore,
+  )
+
+lazy val http4s = (project in file("modules/http4s"))
+  .dependsOn(core % "compile->compile;test->test")
+  .dependsOn(circe % "test->test")
+  .settings(commonSettings ++ publishSettings: _*)
+  .settings(
+    name := "snowflake4s-http4s",
+    libraryDependencies ++= Seq(
+      http4sCore,
+      http4sDsl % Test,
+      http4sCirce % Test,
+    ),
   )
 
 lazy val docs = (project in file("modules/docs"))

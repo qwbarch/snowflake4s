@@ -20,5 +20,6 @@ libraryDependencies += "io.github.qwbarch" %% "snowflake4s" % "1.0.1"
 libraryDependencies ++= Seq(
   "io.github.qwbarch" %% "snowflake4s-circe" % "1.0.1",
   "io.github.qwbarch" %% "snowflake4s-skunk" % "1.0.1",
+  "io.github.qwbarch" %% "snowflake4s-http4s" % "1.0.1",
 )
 ```
