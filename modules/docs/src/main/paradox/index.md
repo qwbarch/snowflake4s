@@ -33,7 +33,7 @@ import cats.effect.IOApp
 import cats.effect.std.Console
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import io.qwbarch.snowflake4s.IdWorkerBuilder
+import io.github.qwbarch.snowflake4s.IdWorkerBuilder
 
 object Main extends IOApp.Simple:
 
