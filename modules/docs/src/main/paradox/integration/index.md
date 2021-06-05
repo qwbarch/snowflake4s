@@ -60,9 +60,7 @@ import io.github.qwbarch.snowflake4s.http4s.syntax.given
 import io.github.qwbarch.snowflake4s.Snowflake
 
 val routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
-   case GET -> Root / SnowflakeVar(snowflake) =>
-   Ok(snowflake.show)
-   case GET -> Root / "user" :? SnowflakeQueryParamMatcher(snowflake) =>
-   Ok(snowflake.show)
+   case GET -> Root / SnowflakeVar(snowflake) => Ok(snowflake.show)
+   case GET -> Root / "user" :? SnowflakeQueryParamMatcher(snowflake) => Ok(snowflake.show)
 }
 ```
