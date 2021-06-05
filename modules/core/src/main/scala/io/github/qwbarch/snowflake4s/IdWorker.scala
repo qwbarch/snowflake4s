@@ -123,7 +123,7 @@ class IdWorker[F[_]: Sync: Logger](
           sequenceTimeStamp <- updateSequenceAndTimeStamp(currentTimeMillis, lastTimeStamp)
           (sequence, timeStamp) = sequenceTimeStamp
           _ <- setLastTimeStamp(timeStamp)
-        } yield nextIdPure(timeStamp, sequence),
+        } yield nextIdPure(timeStamp, sequence)
       },
     )
 }

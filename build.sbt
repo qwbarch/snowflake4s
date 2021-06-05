@@ -42,7 +42,6 @@ lazy val core = (project in file("modules/core"))
     libraryDependencies ++= Seq(
       catsCore,
       catsKernel,
-      catsEffectStd,
       catsEffectKernel,
       log4CatsCore,
     ),
