@@ -11,5 +11,14 @@ Visit the [microsite](https://qwbarch.github.io/snowflake4s/) for more informati
 ## Quickstart
 
 ```scala
-libraryDependencies += "io.github.qwbarch" %% "snowflake4s" % "1.0.0"
+libraryDependencies += "io.github.qwbarch" %% "snowflake4s" % "1.0.1"
+```
+
+## Library integration
+
+```scala
+libraryDependencies ++= Seq(
+  "io.github.qwbarch" %% "snowflake4s-circe" % "1.0.1",
+  "io.github.qwbarch" %% "snowflake4s-skunk" % "1.0.1",
+)
 ```

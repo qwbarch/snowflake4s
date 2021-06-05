@@ -1,3 +1,9 @@
+@@@ index
+
+* [Integration](integration/index.md)
+
+@@@
+
 # snowflake4s
 
 ## Overview
