@@ -18,8 +18,8 @@ libraryDependencies += "io.github.qwbarch" %% "snowflake4s" % "1.1.0-M3"
 
 ```scala
 libraryDependencies ++= Seq(
-  "io.github.qwbarch" %% "snowflake4s-circe" % "1.1.0-M3",
-  "io.github.qwbarch" %% "snowflake4s-skunk" % "1.1.0-M3",
+  "io.github.qwbarch" %% "snowflake4s-circe"  % "1.1.0-M3",
+  "io.github.qwbarch" %% "snowflake4s-skunk"  % "1.1.0-M3",
   "io.github.qwbarch" %% "snowflake4s-http4s" % "1.1.0-M3",
 )
 ```
