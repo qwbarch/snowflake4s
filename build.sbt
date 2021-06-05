@@ -173,3 +173,5 @@ lazy val releaseSettings = Seq(
 )
 
 lazy val sharedPublishSettings = Seq(publishTo := sonatypePublishToBundle.value)
+
+addCommandAlias("ci", "+undeclaredCompileDependenciesTest; +unusedCompileDependenciesTest; scalafmtCheckAll; +test")
