@@ -7,4 +7,5 @@ object Version {
    val weaver = "0.7.3"
    val macroParadise = "2.1.1"
    val newType = "0.4.4"
+   val skunk = "0.2.0"
 }

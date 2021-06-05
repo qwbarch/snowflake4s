@@ -27,7 +27,10 @@ import cats.kernel.Eq
 /**
  * A 64-bit unique identifier with a timestamp.
  */
-final class Snowflake(val value: Long) extends AnyVal
+final class Snowflake(val value: Long) extends AnyVal {
+
+  override def toString(): String = value.toString
+}
 
 object Snowflake {
   implicit val showSnowflake: Show[Snowflake] = Show.fromToString
