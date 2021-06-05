@@ -26,7 +26,6 @@ package io.github.qwbarch.snowflake4s
 import cats.syntax.all._
 import cats.effect.kernel.Sync
 import cats.effect.kernel.Ref
-import cats.effect.std.Semaphore
 import org.typelevel.log4cats.Logger
 
 /**
@@ -38,7 +37,6 @@ class IdWorker[F[_]: Sync: Logger](
     epoch: Long,
     dataCenterId: Long,
     workerId: Long,
-    semaphore: Semaphore[F],
 ) {
 
   import IdWorker._
@@ -49,7 +47,7 @@ class IdWorker[F[_]: Sync: Logger](
    * @return
    *   The current time in milliseconds.
    */
-  protected val currentTimeMillis: F[Long] = Sync[F].delay(System.currentTimeMillis)
+  protected def currentTimeMillis: F[Long] = Sync[F].delay(System.currentTimeMillis)
 
   /**
    * Busy-loops until the next millisecond, based on the given timestamp.
@@ -85,37 +83,48 @@ class IdWorker[F[_]: Sync: Logger](
     )
 
   /**
+   * Checks if time is moving backwards. Will raise an exception if time is moving backwards.
+   */
+  private def verifyTimeMovingForward(currentTimeMillis: Long, lastTimeStamp: Long) =
+    if (currentTimeMillis < lastTimeStamp)
+      Logger[F].error(show"Clock is moving backwards. Rejecting requests until $lastTimeStamp.") *>
+        Sync[F].raiseError(
+          new RuntimeException(
+            show"Clock moved backwards. Refusing to generate id for ${lastTimeStamp - currentTimeMillis} milliseconds.",
+          ),
+        )
+    else Sync[F].unit
+
+  /**
+   * Updates the sequence and provides a new timestamp.
+   */
+  private def updateSequenceAndTimeStamp(currentTimeMillis: Long, lastTimeStamp: Long): F[(Long, Long)] =
+    if (currentTimeMillis === lastTimeStamp)
+      sequence
+        .updateAndGet(it => (it + 1L) & SequenceMask)
+        .flatMap(sequence =>
+          (
+            if (sequence === 0L) tilNextMillis(lastTimeStamp)
+            else currentTimeMillis.pure[F]
+          ).map(sequence -> _),
+        )
+    else sequence.set(0L).as(0L -> currentTimeMillis)
+
+  /**
    * Generates a new snowflake id.
    *
    * @return A new snowflake id.
    */
   val nextId: F[Snowflake] =
-    semaphore.permit.use(_ =>
-      for {
-        currentTimeMillis <- currentTimeMillis
-        lastTimeStamp <- lastTimeStamp.get
-        _ <-
-          if (currentTimeMillis < lastTimeStamp)
-            Logger[F].error(show"Clock is moving backwards. Rejecting requests until $lastTimeStamp.") *>
-              Sync[F].raiseError(
-                new RuntimeException(
-                  show"Clock moved backwards. Refusing to generate id for ${lastTimeStamp - currentTimeMillis} milliseconds.",
-                ),
-              )
-          else Sync[F].unit
-        timeStamp <-
-          if (currentTimeMillis === lastTimeStamp)
-            sequence
-              .updateAndGet(it => (it + 1) & SequenceMask)
-              .map(_ === 0)
-              .ifM(
-                ifTrue = tilNextMillis(lastTimeStamp),
-                ifFalse = currentTimeMillis.pure[F],
-              )
-          else sequence.set(0).as(currentTimeMillis)
-        _ <- this.lastTimeStamp.set(timeStamp)
-        sequence <- sequence.get
-      } yield nextIdPure(timeStamp, sequence),
+    currentTimeMillis.flatMap(currentTimeMillis =>
+      lastTimeStamp.access.flatMap { case (lastTimeStamp, setLastTimeStamp) =>
+        for {
+          _ <- verifyTimeMovingForward(currentTimeMillis, lastTimeStamp)
+          sequenceTimeStamp <- updateSequenceAndTimeStamp(currentTimeMillis, lastTimeStamp)
+          (sequence, timeStamp) = sequenceTimeStamp
+          _ <- setLastTimeStamp(timeStamp)
+        } yield nextIdPure(timeStamp, sequence),
+      },
     )
 }
 

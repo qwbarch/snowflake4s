@@ -30,7 +30,6 @@ import org.typelevel.log4cats.noop.NoOpLogger
 import cats.effect.IO
 import cats.effect.kernel.Sync
 import cats.effect.kernel.Ref
-import cats.effect.std.Semaphore
 import cats.syntax.all._
 import io.github.qwbarch.snowflake4s.arbitrary._
 
@@ -41,10 +40,9 @@ private class EasyTimeWorker[F[_]: Sync: Logger](
     val epoch: Long,
     dataCenterId: Long,
     workerId: Long,
-    semaphore: Semaphore[F],
-) extends IdWorker[F](lastTimeStamp, sequence, epoch, dataCenterId, workerId, semaphore) {
+) extends IdWorker[F](lastTimeStamp, sequence, epoch, dataCenterId, workerId) {
 
-  override protected val currentTimeMillis: F[Long] = nextMillis.get.flatten
+  override protected def currentTimeMillis: F[Long] = nextMillis.get.flatten
 }
 
 private class WakingIdWorker[F[_]: Sync: Logger](
@@ -55,8 +53,7 @@ private class WakingIdWorker[F[_]: Sync: Logger](
     epoch: Long,
     dataCenterId: Long,
     workerId: Long,
-    semaphore: Semaphore[F],
-) extends EasyTimeWorker[F](nextMillis, lastTimeStamp, sequence, epoch, dataCenterId, workerId, semaphore) {
+) extends EasyTimeWorker[F](nextMillis, lastTimeStamp, sequence, epoch, dataCenterId, workerId) {
 
   override protected def tilNextMillis(lastTimeStamp: Long): F[Long] =
     slept.update(_ + 1) *> super.tilNextMillis(lastTimeStamp)
@@ -69,10 +66,9 @@ private class StaticTimeWorker[F[_]: Sync: Logger](
     epoch: Long,
     dataCenterId: Long,
     workerId: Long,
-    semaphore: Semaphore[F],
-) extends IdWorker[F](lastTimeStamp, sequence, epoch, dataCenterId, workerId, semaphore) {
+) extends IdWorker[F](lastTimeStamp, sequence, epoch, dataCenterId, workerId) {
 
-  override protected val currentTimeMillis: F[Long] = time.get.map(_ + epoch)
+  override protected def currentTimeMillis: F[Long] = time.get.map(_ + epoch)
 }
 
 object IdWorkerSuite extends SimpleIOSuite with Checkers {
@@ -88,7 +84,6 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
       nextMillis <- Ref.of(IO(System.currentTimeMillis))
       lastTimeStamp <- Ref.of(-1L)
       sequence <- Ref.of(0L)
-      semaphore <- Semaphore[IO](1)
     } yield new EasyTimeWorker(
       nextMillis,
       lastTimeStamp,
@@ -96,7 +91,6 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
       IdWorker.TwitterEpoch,
       dataCenterId,
       workerId,
-      semaphore,
     )
 
   private def createWakingIdWorker(workerId: Long, dataCenterId: Long) =
@@ -105,7 +99,6 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
       slept <- Ref.of(0)
       lastTimeStamp <- Ref.of(-1L)
       sequence <- Ref.of(0L)
-      semaphore <- Semaphore[IO](1)
     } yield new WakingIdWorker(
       nextMillis,
       slept,
@@ -114,7 +107,6 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
       IdWorker.TwitterEpoch,
       dataCenterId,
       workerId,
-      semaphore,
     )
 
   private def createStaticTimeWorker(workerId: Long, dataCenterId: Long) =
@@ -122,7 +114,6 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
       time <- Ref.of(1L)
       lastTimeStamp <- Ref.of(-1L)
       sequence <- Ref.of(0L)
-      semaphore <- Semaphore[IO](1)
     } yield new StaticTimeWorker(
       time,
       lastTimeStamp,
@@ -130,7 +121,6 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
       IdWorker.TwitterEpoch,
       dataCenterId,
       workerId,
-      semaphore,
     )
 
   test("Generate id") {

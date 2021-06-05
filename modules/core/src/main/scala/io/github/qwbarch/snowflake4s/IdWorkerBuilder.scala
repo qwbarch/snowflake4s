@@ -26,7 +26,6 @@ import org.typelevel.log4cats.Logger
 import cats.syntax.all._
 import cats.effect.kernel.Async
 import cats.effect.kernel.Ref
-import cats.effect.std.Semaphore
 
 /**
  * A builder for creating instances of [[IdWorker]].
@@ -111,8 +110,7 @@ final class IdWorkerBuilder[F[_]: Async: Logger](
       )
       lastTimeStamp <- Ref[F].of(-1L)
       sequence <- Ref[F].of(sequence)
-      semaphore <- Semaphore[F](1)
-    } yield new IdWorker(lastTimeStamp, sequence, epoch, dataCenterId, workerId, semaphore)
+    } yield new IdWorker(lastTimeStamp, sequence, epoch, dataCenterId, workerId)
 }
 
 object IdWorkerBuilder {
