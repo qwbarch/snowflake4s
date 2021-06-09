@@ -27,13 +27,14 @@ import cats.syntax.all._
 import cats.effect.kernel.Sync
 import cats.effect.kernel.Ref
 import org.typelevel.log4cats.Logger
+import cats.effect.std.Semaphore
+import scala.annotation.tailrec
 
 /**
  * Generates new snowflake ids. Use [[IdWorkerBuilder]] to create workers.
  */
 class IdWorker[F[_]: Sync: Logger](
-    lastTimeStamp: Ref[F, Long],
-    sequence: Ref[F, Long],
+    state: Ref[F, WorkerState],
     epoch: Long,
     dataCenterId: Long,
     workerId: Long,
@@ -44,21 +45,17 @@ class IdWorker[F[_]: Sync: Logger](
   /**
    * Calculates the current time in milliseconds.
    *
-   * @return
-   *   The current time in milliseconds.
+   * @return The current time in milliseconds.
    */
   protected def currentTimeMillis: F[Long] = Sync[F].delay(System.currentTimeMillis)
 
   /**
-   * Busy-loops until the next millisecond, based on the given timestamp.
+   * Busy-loops until the next millisecond, based on the given timestamp.<br>
    *
-   * @param lastTimeStamp
-   *   The timestamp to base the next millisecond off of.
-   * @return
-   *   The next timestamp after the busy-looping finishes.
+   * @param lastTimeStamp The timestamp to base the next millisecond off of.
+   * @return The next timestamp after the busy-looping finishes.
    */
-  protected def tilNextMillis(lastTimeStamp: Long): F[Long] =
-    currentTimeMillis.iterateWhile(_ <= lastTimeStamp)
+  protected def tilNextMillis(lastTimeStamp: Long): F[Long] = currentTimeMillis.iterateWhile(_ <= lastTimeStamp)
 
   /**
    * Extracts the timestamp of a snowflake.
@@ -83,32 +80,29 @@ class IdWorker[F[_]: Sync: Logger](
     )
 
   /**
-   * Checks if time is moving backwards. Will raise an exception if time is moving backwards.
+   * Updates the timestamp and sequence.
    */
-  private def verifyTimeMovingForward(currentTimeMillis: Long, lastTimeStamp: Long) =
-    if (currentTimeMillis < lastTimeStamp)
+  private def updateState(timeStamp: Long, lastTimeStamp: Long, sequence: Long): F[WorkerState] =
+    if (timeStamp === lastTimeStamp) {
+      val nextSequence = (sequence + 1) & SequenceMask
+      val nextTimeStamp =
+        if (nextSequence === 0L) tilNextMillis(lastTimeStamp)
+        else timeStamp.pure[F]
+      nextTimeStamp.map(WorkerState(_, nextSequence))
+    } else WorkerState(timeStamp, 0L).pure[F]
+
+  /**
+   * Verifies the timestamp isn't going backwards. Raises an exception if so.
+   */
+  private def verifyTimeStamp(timeStamp: Long, lastTimeStamp: Long) =
+    if (timeStamp < lastTimeStamp)
       Logger[F].error(show"Clock is moving backwards. Rejecting requests until $lastTimeStamp.") *>
         Sync[F].raiseError(
           new RuntimeException(
-            show"Clock moved backwards. Refusing to generate id for ${lastTimeStamp - currentTimeMillis} milliseconds.",
+            show"Clock moved backwards. Refusing to generate id for ${lastTimeStamp - timeStamp} milliseconds.",
           ),
         )
     else Sync[F].unit
-
-  /**
-   * Updates the sequence and provides a new timestamp.
-   */
-  private def updateSequenceAndTimeStamp(currentTimeMillis: Long, lastTimeStamp: Long): F[(Long, Long)] =
-    if (currentTimeMillis === lastTimeStamp)
-      sequence
-        .updateAndGet(it => (it + 1L) & SequenceMask)
-        .flatMap(sequence =>
-          (
-            if (sequence === 0L) tilNextMillis(lastTimeStamp)
-            else currentTimeMillis.pure[F]
-          ).map(sequence -> _),
-        )
-    else sequence.set(0L).as(0L -> currentTimeMillis)
 
   /**
    * Generates a new snowflake id.
@@ -116,16 +110,17 @@ class IdWorker[F[_]: Sync: Logger](
    * @return A new snowflake id.
    */
   val nextId: F[Snowflake] =
-    currentTimeMillis.flatMap(currentTimeMillis =>
-      lastTimeStamp.access.flatMap { case (lastTimeStamp, setLastTimeStamp) =>
-        for {
-          _ <- verifyTimeMovingForward(currentTimeMillis, lastTimeStamp)
-          sequenceTimeStamp <- updateSequenceAndTimeStamp(currentTimeMillis, lastTimeStamp)
-          (sequence, timeStamp) = sequenceTimeStamp
-          _ <- setLastTimeStamp(timeStamp)
-        } yield nextIdPure(timeStamp, sequence)
-      },
-    )
+    state.access.flatMap { case (WorkerState(lastTimeStamp, sequence), setState) =>
+      for {
+        timeStamp <- currentTimeMillis
+        _ <- verifyTimeStamp(timeStamp, lastTimeStamp)
+        nextState <- updateState(timeStamp, lastTimeStamp, sequence)
+        successful <- setState(nextState)
+        id <-
+          if (successful) nextIdPure(nextState.lastTimeStamp, nextState.sequence).pure[F]
+          else nextId
+      } yield id
+    }
 }
 
 object IdWorker {

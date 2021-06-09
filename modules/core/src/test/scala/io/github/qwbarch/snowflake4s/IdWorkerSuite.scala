@@ -32,41 +32,40 @@ import cats.effect.kernel.Sync
 import cats.effect.kernel.Ref
 import cats.syntax.all._
 import io.github.qwbarch.snowflake4s.arbitrary._
+import cats.effect.std.Semaphore
+import cats.effect.kernel.Async
 
-private class EasyTimeWorker[F[_]: Sync: Logger](
+private class EasyTimeWorker[F[_]: Async: Logger](
     val nextMillis: Ref[F, F[Long]],
-    lastTimeStamp: Ref[F, Long],
-    sequence: Ref[F, Long],
+    state: Ref[F, WorkerState],
     val epoch: Long,
     dataCenterId: Long,
     workerId: Long,
-) extends IdWorker[F](lastTimeStamp, sequence, epoch, dataCenterId, workerId) {
+) extends IdWorker[F](state, epoch, dataCenterId, workerId) {
 
   override protected def currentTimeMillis: F[Long] = nextMillis.get.flatten
 }
 
-private class WakingIdWorker[F[_]: Sync: Logger](
+private class WakingIdWorker[F[_]: Async: Logger](
     nextMillis: Ref[F, F[Long]],
     val slept: Ref[F, Int],
-    lastTimeStamp: Ref[F, Long],
-    val sequence: Ref[F, Long],
+    val state: Ref[F, WorkerState],
     epoch: Long,
     dataCenterId: Long,
     workerId: Long,
-) extends EasyTimeWorker[F](nextMillis, lastTimeStamp, sequence, epoch, dataCenterId, workerId) {
+) extends EasyTimeWorker[F](nextMillis, state, epoch, dataCenterId, workerId) {
 
   override protected def tilNextMillis(lastTimeStamp: Long): F[Long] =
     slept.update(_ + 1) *> super.tilNextMillis(lastTimeStamp)
 }
 
-private class StaticTimeWorker[F[_]: Sync: Logger](
+private class StaticTimeWorker[F[_]: Async: Logger](
     val time: Ref[F, Long],
-    lastTimeStamp: Ref[F, Long],
-    val sequence: Ref[F, Long],
+    val state: Ref[F, WorkerState],
     epoch: Long,
     dataCenterId: Long,
     workerId: Long,
-) extends IdWorker[F](lastTimeStamp, sequence, epoch, dataCenterId, workerId) {
+) extends IdWorker[F](state, epoch, dataCenterId, workerId) {
 
   override protected def currentTimeMillis: F[Long] = time.get.map(_ + epoch)
 }
@@ -81,13 +80,11 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
 
   private def createEasyTimeWorker(workerId: Long, dataCenterId: Long) =
     for {
+      state <- Ref.of(WorkerState(lastTimeStamp = -1, sequence = 0L))
       nextMillis <- Ref.of(IO(System.currentTimeMillis))
-      lastTimeStamp <- Ref.of(-1L)
-      sequence <- Ref.of(0L)
     } yield new EasyTimeWorker(
       nextMillis,
-      lastTimeStamp,
-      sequence,
+      state,
       IdWorker.TwitterEpoch,
       dataCenterId,
       workerId,
@@ -96,14 +93,12 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
   private def createWakingIdWorker(workerId: Long, dataCenterId: Long) =
     for {
       nextMillis <- Ref.of(IO(System.currentTimeMillis))
+      state <- Ref.of(WorkerState(lastTimeStamp = -1, sequence = 0L))
       slept <- Ref.of(0)
-      lastTimeStamp <- Ref.of(-1L)
-      sequence <- Ref.of(0L)
     } yield new WakingIdWorker(
       nextMillis,
       slept,
-      lastTimeStamp,
-      sequence,
+      state,
       IdWorker.TwitterEpoch,
       dataCenterId,
       workerId,
@@ -111,13 +106,11 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
 
   private def createStaticTimeWorker(workerId: Long, dataCenterId: Long) =
     for {
+      state <- Ref[F].of(WorkerState(lastTimeStamp = -1, sequence = 0L))
       time <- Ref.of(1L)
-      lastTimeStamp <- Ref.of(-1L)
-      sequence <- Ref.of(0L)
     } yield new StaticTimeWorker(
       time,
-      lastTimeStamp,
-      sequence,
+      state,
       IdWorker.TwitterEpoch,
       dataCenterId,
       workerId,
@@ -166,10 +159,10 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
     forall { (workerId: Long, dataCenterId: Long) =>
       for {
         worker <- createEasyTimeWorker(workerId, dataCenterId)
-        currentTimeMillis <- IO(System.currentTimeMillis)
-        _ <- worker.nextMillis.set(currentTimeMillis.pure[F])
+        timeStamp <- IO(System.currentTimeMillis)
+        _ <- worker.nextMillis.set(IO.pure(timeStamp))
         id <- worker.nextId
-      } yield expect((id.value & TimeStampMask) >> 22L == currentTimeMillis - worker.epoch)
+      } yield expect((id.value & TimeStampMask) >> 22L == timeStamp - worker.epoch)
     }
   }
 
@@ -196,21 +189,35 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
         worker <- createWakingIdWorker(workerId, dataCenterId)
         iterator = List(2L, 2L, 3L).iterator
         _ <- worker.nextMillis.set(IO(iterator.next()))
-        _ <- worker.sequence.set(4095)
+        _ <- worker.state.update(_.copy(sequence = 4095))
         _ <- worker.nextId
-        _ <- worker.sequence.set(4095)
+        _ <- worker.state.update(_.copy(sequence = 4095))
         _ <- worker.nextId
         slept <- worker.slept.get
       } yield expect.same(1, slept)
     }
   }
 
-  test("Ids must be unique") {
+  test("Ids must be unique generating sequentially") {
     forall { (workerId: Long, dataCenterId: Long) =>
       for {
         worker <- createWakingIdWorker(workerId, dataCenterId)
         ids <- (1 to 100).map(_ => worker.nextId).toList.sequence
       } yield expect.same(100, ids.distinct.size)
+    }
+  }
+
+  test("Ids must be unique generating in parallel") {
+    forall { (workerId: Long, dataCenterId: Long) =>
+      for {
+        worker <- IdWorkerBuilder
+          .default[IO]
+          .withWorkerId(workerId)
+          .withDataCenterId(dataCenterId)
+          .build
+        ids <- (0 to 20000).toList.map(_ => worker.nextId).parSequence
+        distinct = ids.distinct
+      } yield expect.same(ids.length, distinct.length)
     }
   }
 
@@ -222,23 +229,23 @@ object IdWorkerSuite extends SimpleIOSuite with Checkers {
 
         // Reported at https://github.com/twitter/snowflake/issues/6
         // First we generate 2 ids with the same time, so that we get the sequence to 1
-        a <- worker.sequence.get.map(it => expect.same(0, it))
+        a <- worker.state.get.map(it => expect.same(0, it.sequence))
         b <- worker.time.get.map(it => expect.same(1, it))
         id1 <- worker.nextId
         c = expect.same(1, id1.value >> 22) && expect.same(0, id1.value & sequenceMask)
 
-        d <- worker.sequence.get.map(it => expect.same(0, it))
+        d <- worker.state.get.map(it => expect.same(0, it.sequence))
         e <- worker.time.get.map(it => expect.same(1, it))
         id2 <- worker.nextId
         f = expect.same(1, id2.value >> 22) && expect.same(1, id2.value & sequenceMask)
 
         // Set time backwards
-        _ <- worker.time.set(0)
-        g <- worker.sequence.get.map(it => expect.same(1, it))
+        _ <- worker.time.set(0L)
+        g <- worker.state.get.map(it => expect.same(1, it.sequence))
         h <- worker.nextId.attempt.map(it => expect(it.isLeft))
-        i <- worker.sequence.get.map(it => expect.same(1, it))
+        i <- worker.state.get.map(it => expect.same(1, it.sequence))
 
-        _ <- worker.time.set(1)
+        _ <- worker.time.set(1L)
         id3 <- worker.nextId
         j = expect.same(1, id3.value >> 22) && expect.same(2, id3.value & sequenceMask)
       } yield a && b && c && d && e && f && g && h && i && j

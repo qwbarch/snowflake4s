@@ -43,6 +43,7 @@ lazy val core = (project in file("modules/core"))
       catsCore,
       catsKernel,
       catsEffectKernel,
+      catsEffectStd,
       log4CatsCore,
     ),
     // Use newtypes for scala 2.13
