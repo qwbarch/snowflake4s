@@ -26,7 +26,6 @@ import org.typelevel.log4cats.Logger
 import cats.syntax.all._
 import cats.effect.kernel.Async
 import cats.effect.kernel.Ref
-import cats.effect.std.Semaphore
 
 /**
  * A builder for creating instances of [[IdWorker]].

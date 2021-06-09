@@ -27,8 +27,6 @@ import cats.syntax.all._
 import cats.effect.kernel.Sync
 import cats.effect.kernel.Ref
 import org.typelevel.log4cats.Logger
-import cats.effect.std.Semaphore
-import scala.annotation.tailrec
 
 /**
  * Generates new snowflake ids. Use [[IdWorkerBuilder]] to create workers.

@@ -21,10 +21,17 @@ lazy val commonSettings: Seq[SettingsDefinition] = Seq(
   // Enable some scala 3 syntax for scala 2.12 and 2.13
   scalacOptions ++= {
     CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, n)) if n >= 12 => "-Xsource:3" :: Nil
+      case Some((2, _)) => "-Xsource:3" :: Nil
       case _ => Nil
     }
   },
+  // Enable better-monadic-for with non-dotty versions
+  libraryDependencies ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, _)) => compilerPlugin(betterMonadicFor) :: Nil
+      case _ => Nil
+    }
+  }
 )
 
 lazy val root = (project in file("."))
@@ -43,7 +50,6 @@ lazy val core = (project in file("modules/core"))
       catsCore,
       catsKernel,
       catsEffectKernel,
-      catsEffectStd,
       log4CatsCore,
     ),
     // Use newtypes for scala 2.13

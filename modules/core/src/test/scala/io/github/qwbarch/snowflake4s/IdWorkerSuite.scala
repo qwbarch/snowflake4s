@@ -28,11 +28,9 @@ import weaver.scalacheck.Checkers
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.noop.NoOpLogger
 import cats.effect.IO
-import cats.effect.kernel.Sync
 import cats.effect.kernel.Ref
 import cats.syntax.all._
 import io.github.qwbarch.snowflake4s.arbitrary._
-import cats.effect.std.Semaphore
 import cats.effect.kernel.Async
 
 private class EasyTimeWorker[F[_]: Async: Logger](
