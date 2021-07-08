@@ -31,7 +31,7 @@ lazy val commonSettings: Seq[SettingsDefinition] = Seq(
       case Some((2, _)) => compilerPlugin(betterMonadicFor) :: Nil
       case _ => Nil
     }
-  }
+  },
 )
 
 lazy val root = (project in file("."))
