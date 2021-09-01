@@ -9,5 +9,5 @@ object Version {
   val macroParadise = "2.1.1"
   val newType = "0.4.4"
   val skunk = "0.2.0"
-  val http4s = "1.0.0-M23"
+  val http4s = "1.0.0-M25"
 }
