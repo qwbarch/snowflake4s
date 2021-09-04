@@ -36,7 +36,6 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 import io.github.qwbarch.snowflake4s.IdWorkerBuilder
 
 object Main extends IOApp.Simple:
-
    override def run: IO[Unit] =
       given Logger[IO] = Slf4jLogger.getLogger[IO]
       for
