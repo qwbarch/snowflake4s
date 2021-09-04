@@ -5,7 +5,7 @@ object Version {
   val catsKernel = "2.6.1"
   val circe = "0.14.1"
   val log4Cats = "2.1.1"
-  val weaver = "0.7.4"
+  val weaver = "0.7.6"
   val macroParadise = "2.1.1"
   val newType = "0.4.4"
   val skunk = "0.2.2"
