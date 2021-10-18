@@ -3,8 +3,8 @@ import ReleaseTransformations._
 
 lazy val commonSettings: Seq[SettingsDefinition] = Seq(
   organization := "io.github.qwbarch",
-  scalaVersion := "3.0.2",
-  crossScalaVersions := Seq("3.0.2", "2.13.6", "2.12.15"),
+  scalaVersion := "3.1.0",
+  crossScalaVersions := Seq("3.1.0", "2.13.6", "2.12.15"),
   testFrameworks += new TestFramework("weaver.framework.CatsEffect"),
   libraryDependencies ++= Seq(
     log4CatsNoOp % Test,
