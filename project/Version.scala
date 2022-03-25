@@ -1,7 +1,7 @@
 object Version {
   val betterMonadicFor = "0.3.1"
   val catsCore = "2.7.0"
-  val catsEffect = "3.3.8"
+  val catsEffect = "3.3.9"
   val catsKernel = "2.7.0"
   val circe = "0.14.1"
   val log4Cats = "2.2.0"
