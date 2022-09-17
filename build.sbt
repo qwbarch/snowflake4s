@@ -4,7 +4,7 @@ import ReleaseTransformations._
 lazy val commonSettings: Seq[SettingsDefinition] = Seq(
   organization := "io.github.qwbarch",
   scalaVersion := "3.1.2",
-  crossScalaVersions := Seq("3.1.2", "2.13.8", "2.12.15"),
+  crossScalaVersions := Seq("3.1.2", "2.13.8", "2.12.17"),
   testFrameworks += new TestFramework("weaver.framework.CatsEffect"),
   libraryDependencies ++= Seq(
     log4CatsNoOp % Test,
