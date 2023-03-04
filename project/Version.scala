@@ -3,7 +3,7 @@ object Version {
   val catsCore = "2.7.0"
   val catsEffect = "3.3.11"
   val catsKernel = "2.7.0"
-  val circe = "0.14.2"
+  val circe = "0.14.5"
   val log4Cats = "2.3.0"
   val weaver = "0.7.11"
   val macroParadise = "2.1.1"
